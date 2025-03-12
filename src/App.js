@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import SearchBar from './components/searchBar';
+import MovieCard from './components/movieCard';
 import { searchMovies } from './api';
 
 function App() {
@@ -18,7 +19,6 @@ function App() {
     }
   };
 
-  // Test with "Avengers" on first load
   useEffect(() => {
     handleSearch('Avengers');
   }, []);
@@ -28,11 +28,11 @@ function App() {
       <h1>Movie Database</h1>
       <SearchBar onSearch={handleSearch} />
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <ul>
+      <div>
         {movies.map((movie) => (
-          <li key={movie.id}>{movie.title}</li>
+          <MovieCard key={movie.id} movie={movie} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
