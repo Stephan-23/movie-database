@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import SearchBar from './components/searchBar';
 import MovieCard from './components/movieCard';
+import MovieDetails from './components/movieDetails';
 import { searchMovies } from './api';
 
 function App() {
@@ -24,16 +26,32 @@ function App() {
   }, []);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Movie Database</h1>
-      <SearchBar onSearch={handleSearch} />
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div>
-        {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+    <Router>
+      <div style={{ padding: '20px' }}>
+        <h1>
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Movie Database
+          </Link>
+        </h1>
+        <SearchBar onSearch={handleSearch} />
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div>
+                {movies.map((movie) => (
+                  <Link key={movie.id} to={`/movie/${movie.id}`}>
+                    <MovieCard movie={movie} />
+                  </Link>
+                ))}
+              </div>
+            }
+          />
+          <Route path="/movie/:id" element={<MovieDetails movies={movies} />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 }
 
