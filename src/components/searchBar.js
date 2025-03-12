@@ -10,16 +10,13 @@ function SearchBar({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="search-form">
       <input
         type="text"
         name="query"
         placeholder="Search for a movie..."
-        style={{ padding: '5px', width: '200px' }}
       />
-      <button type="submit" style={{ padding: '5px 10px' }}>
-        Search
-      </button>
+      <button type="submit">Search</button>
     </form>
   );
 }

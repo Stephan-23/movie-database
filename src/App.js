@@ -4,12 +4,16 @@ import SearchBar from './components/searchBar';
 import MovieCard from './components/movieCard';
 import MovieDetails from './components/movieDetails';
 import { searchMovies } from './api';
+import './App.css';
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = async (query) => {
+    setLoading(true);
+    setError(null);
     try {
       const results = await searchMovies(query);
       setMovies(results);
@@ -18,6 +22,8 @@ function App() {
       console.error('Error fetching movies:', error);
       setError('Something went wrong. Please try again.');
       setMovies([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -27,21 +33,22 @@ function App() {
 
   return (
     <Router>
-      <div style={{ padding: '20px' }}>
+      <div className="app-container">
         <h1>
           <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             Movie Database
           </Link>
         </h1>
         <SearchBar onSearch={handleSearch} />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="error">{error}</p>}
+        {loading && <p className="loading">Loading...</p>}
         <Routes>
           <Route
             path="/"
             element={
-              <div>
+              <div className="movie-grid">
                 {movies.map((movie) => (
-                  <Link key={movie.id} to={`/movie/${movie.id}`}>
+                  <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
                     <MovieCard movie={movie} />
                   </Link>
                 ))}
