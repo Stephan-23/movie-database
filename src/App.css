@@ -1,68 +1,203 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background-color: #1a1d29;
+  color: white;
 }
 
 .app-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
 }
 
-h1 {
-  text-align: center;
-  color: #333;
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.logo::before {
+  content: '●';
+  color: red;
+  margin-right: 5px;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nav-link.active {
+  color: red;
+}
+
+.nav-link:hover {
+  color: #ccc;
+}
+
+/* Search Bar */
 .search-form {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  padding: 20px 0;
 }
 
 .search-form input {
   padding: 10px;
   width: 300px;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 5px 0 0 5px;
   font-size: 16px;
+  background-color: #2a2d3a;
+  color: white;
+}
+
+.search-form input::placeholder {
+  color: #aaa;
 }
 
 .search-form button {
   padding: 10px 20px;
-  border: 1px solid #ccc;
-  border-left: none;
+  border: none;
   border-radius: 0 5px 5px 0;
-  background-color: #007bff;
+  background-color: #ff0000;
   color: white;
   cursor: pointer;
   font-size: 16px;
 }
 
 .search-form button:hover {
-  background-color: #0056b3;
+  background-color: #cc0000;
 }
 
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+/* Hero Section */
+.hero {
+  position: relative;
+  height: 500px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 40px;
+  margin-bottom: 20px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.hero-content {
+  position: relative;
+  max-width: 600px;
+}
+
+.hero-content h1 {
+  font-size: 48px;
+  margin: 0 0 10px;
+}
+
+.hero-content p {
+  font-size: 16px;
+  margin: 0 0 20px;
+  color: #ddd;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.watch-trailer,
+.watch-now {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.watch-trailer {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+}
+
+.watch-now {
+  background-color: #ff0000;
+  color: white;
+}
+
+.watch-trailer:hover,
+.watch-now:hover {
+  opacity: 0.9;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.section h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  border-left: 4px solid red;
+  padding-left: 10px;
+}
+
+.movie-list {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #1a1d29;
+}
+
+.movie-list::-webkit-scrollbar {
+  height: 8px;
+}
+
+.movie-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.movie-list::-webkit-scrollbar-track {
+  background: #1a1d29;
 }
 
 .movie-card {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 10px;
-  background-color: white;
+  flex: 0 0 auto;
+  width: 150px;
   text-decoration: none;
-  color: inherit;
-  transition: box-shadow 0.2s;
-}
-
-.movie-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white;
 }
 
 .movie-card img {
@@ -72,17 +207,28 @@ h1 {
 }
 
 .movie-card h3 {
-  font-size: 16px;
-  margin: 10px 0;
-  color: #333;
+  font-size: 14px;
+  margin: 5px 0 0;
+  text-align: center;
 }
 
-.movie-card p {
-  font-size: 12px;
-  color: #666;
-  margin: 5px 0;
+.view-all {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 5px 10px;
+  border: 1px solid #888;
+  border-radius: 20px;
 }
 
+.view-all:hover {
+  background-color: #2a2d3a;
+}
+
+/* Error and Loading */
 .error {
   color: red;
   text-align: center;
@@ -96,8 +242,9 @@ h1 {
   margin: 20px 0;
 }
 
+/* Movie Details */
 .movie-details {
-  background-color: white;
+  background-color: #2a2d3a;
   padding: 20px;
   border-radius: 5px;
   margin-top: 20px;
@@ -109,12 +256,12 @@ h1 {
 }
 
 .movie-details h2 {
-  color: #333;
+  color: white;
   margin-bottom: 10px;
 }
 
 .movie-details p {
   font-size: 16px;
-  color: #666;
+  color: #ccc;
   margin: 10px 0;
 }
