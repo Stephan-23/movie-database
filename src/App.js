@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import SearchBar from './components/searchBar';
 import MovieCard from './components/movieCard';
@@ -8,6 +8,7 @@ import {
   getTopRatedMovies,
   getTopRatedSeries,
   searchMovies,
+  getMoviesByGenre,
 } from './api';
 import './App.css';
 
@@ -16,8 +17,12 @@ function App() {
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [topRatedSeries, setTopRatedSeries] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const [genreMovies, setGenreMovies] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +47,26 @@ function App() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchMoviesByGenre = async () => {
+      if (selectedGenre) {
+        setLoading(true);
+        setError(null);
+        try {
+          const movies = await getMoviesByGenre(selectedGenre);
+          setGenreMovies(movies);
+        } catch (error) {
+          console.error('Error fetching movies by genre:', error);
+          setError('No movies found for this genre.');
+          setGenreMovies([]);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    fetchMoviesByGenre();
+  }, [selectedGenre]);
+
   const handleSearch = async (query) => {
     setLoading(true);
     setError(null);
@@ -57,7 +82,7 @@ function App() {
     }
   };
 
-  // Define 10 genres (these are common TMDb genre IDs and names)
+  // Define 10 genres (TMDb genre IDs and names)
   const genres = [
     { id: 28, name: 'Action' },
     { id: 35, name: 'Comedy' },
@@ -73,19 +98,65 @@ function App() {
 
   const handleGenreChange = (event) => {
     const genreId = event.target.value;
-    // Placeholder: This would trigger a genre-specific fetch (to be implemented later)
-    console.log('Selected genre ID:', genreId);
+    setSelectedGenre(genreId);
   };
 
-  // Use the first trending movie for the hero section
-  const featuredMovie = trendingMovies[0] || {};
+  // Carousel controls
+  const nextMovie = () => {
+    setCurrentMovieIndex((prev) =>
+      prev + 1 < Math.min(6, trendingMovies.length) ? prev + 1 : 0
+    );
+    resetTimer();
+  };
+
+  const handleDragStart = (e) => {
+    const startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    const handleDragMove = (moveEvent) => {
+      const currentX =
+        moveEvent.type === 'touchmove'
+          ? moveEvent.touches[0].clientX
+          : moveEvent.clientX;
+      const diff = startX - currentX;
+      if (diff > 50) {
+        nextMovie();
+        document.removeEventListener('mousemove', handleDragMove);
+        document.removeEventListener('mouseup', handleDragEnd);
+        document.removeEventListener('touchmove', handleDragMove);
+        document.removeEventListener('touchend', handleDragEnd);
+      }
+    };
+    const handleDragEnd = () => {
+      document.removeEventListener('mousemove', handleDragMove);
+      document.removeEventListener('mouseup', handleDragEnd);
+      document.removeEventListener('touchmove', handleDragMove);
+      document.removeEventListener('touchend', handleDragEnd);
+    };
+    document.addEventListener('mousemove', handleDragMove);
+    document.addEventListener('mouseup', handleDragEnd);
+    document.addEventListener('touchmove', handleDragMove, { passive: true });
+    document.addEventListener('touchend', handleDragEnd);
+  };
+
+  const resetTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    timerRef.current = setInterval(nextMovie, 10000); // Auto-transition every 15 seconds
+  };
+
+  useEffect(() => {
+    resetTimer();
+    return () => clearInterval(timerRef.current);
+  }, [trendingMovies]);
+
+  const featuredMovie = trendingMovies[currentMovieIndex] || {};
 
   return (
     <Router>
       <div className="app-container">
         <header className="header">
           <Link to="/" className="logo">
-            tMovies
+           Movies
           </Link>
           <nav>
             <Link to="/" className="nav-link active">
@@ -103,7 +174,7 @@ function App() {
               defaultValue=""
             >
               <option value="" disabled>
-                Select Genre
+               Genre
               </option>
               {genres.map((genre) => (
                 <option key={genre.id} value={genre.id}>
@@ -130,6 +201,8 @@ function App() {
                         ? `url(https://image.tmdb.org/t/p/original${featuredMovie.backdrop_path})`
                         : 'none',
                     }}
+                    onMouseDown={handleDragStart}
+                    onTouchStart={handleDragStart}
                   >
                     <div className="hero-content">
                       <h1>{featuredMovie.title}</h1>
@@ -153,6 +226,25 @@ function App() {
                           className="movie-card"
                         >
                           <MovieCard movie={item} />
+                        </Link>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {genreMovies.length > 0 && (
+                  <section className="section">
+                    <h2>
+                      {genres.find((g) => g.id === parseInt(selectedGenre))?.name} Movies
+                    </h2>
+                    <div className="movie-list">
+                      {genreMovies.map((movie) => (
+                        <Link
+                          key={movie.id}
+                          to={`/movie/${movie.id}`}
+                          className="movie-card"
+                        >
+                          <MovieCard movie={movie} />
                         </Link>
                       ))}
                     </div>
@@ -198,7 +290,7 @@ function App() {
                     {topRatedSeries.map((series) => (
                       <Link
                         key={series.id}
-                        to={`/series/${series.id}`} // Placeholder route
+                        to={`/series/${series.id}`}
                         className="movie-card"
                       >
                         <MovieCard movie={series} />
@@ -216,7 +308,7 @@ function App() {
             path="/movie/:id"
             element={
               <MovieDetails
-                movies={[...trendingMovies, ...topRatedMovies]}
+                movies={[...trendingMovies, ...topRatedMovies, ...genreMovies]}
               />
             }
           />

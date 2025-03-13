@@ -38,6 +38,7 @@ body {
 
 nav {
   display: flex;
+  align-items: center;
   gap: 20px;
 }
 
@@ -90,7 +91,7 @@ nav {
   background-color: #cc0000;
 }
 
-/* Hero Section */
+/* Hero Section (Carousel) */
 .hero {
   position: relative;
   height: 500px;
@@ -100,6 +101,7 @@ nav {
   align-items: flex-end;
   padding: 40px;
   margin-bottom: 20px;
+  transition: background-image 0.5s ease;
 }
 
 .hero::before {
@@ -120,6 +122,7 @@ nav {
 .hero-content h1 {
   font-size: 48px;
   margin: 0 0 10px;
+  color: white;
 }
 
 .hero-content p {
@@ -228,6 +231,28 @@ nav {
   background-color: #2a2d3a;
 }
 
+/* Genre Dropdown */
+.genre-dropdown {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2a2d3a;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.genre-dropdown option {
+  background-color: #1a1d29;
+  color: white;
+}
+
+.genre-dropdown:focus {
+  outline: none;
+  border: 1px solid #ff0000;
+}
+
 /* Error and Loading */
 .error {
   color: red;
@@ -264,26 +289,4 @@ nav {
   font-size: 16px;
   color: #ccc;
   margin: 10px 0;
-}
-
-/* Add this at the end of App.css */
-.genre-dropdown {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #2a2d3a;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-.genre-dropdown option {
-  background-color: #1a1d29;
-  color: white;
-}
-
-.genre-dropdown:focus {
-  outline: none;
-  border: 1px solid #ff0000;
 }

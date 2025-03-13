@@ -42,4 +42,13 @@ export const getTopRatedSeries = async () => {
   });
   return response.data.results;
 };
-
+// Fetch movies by genre
+export const getMoviesByGenre = async (genreId) => {
+  const response = await axios.get(`${BASE_URL}/discover/movie`, {
+    params: {
+      api_key: API_KEY,
+      with_genres: genreId,
+    },
+  });
+  return response.data.results;
+};
