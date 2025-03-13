@@ -57,6 +57,26 @@ function App() {
     }
   };
 
+  // Define 10 genres (these are common TMDb genre IDs and names)
+  const genres = [
+    { id: 28, name: 'Action' },
+    { id: 35, name: 'Comedy' },
+    { id: 18, name: 'Drama' },
+    { id: 27, name: 'Horror' },
+    { id: 10751, name: 'Family' },
+    { id: 878, name: 'Science Fiction' },
+    { id: 53, name: 'Thriller' },
+    { id: 16, name: 'Animation' },
+    { id: 10749, name: 'Romance' },
+    { id: 99, name: 'Documentary' },
+  ];
+
+  const handleGenreChange = (event) => {
+    const genreId = event.target.value;
+    // Placeholder: This would trigger a genre-specific fetch (to be implemented later)
+    console.log('Selected genre ID:', genreId);
+  };
+
   // Use the first trending movie for the hero section
   const featuredMovie = trendingMovies[0] || {};
 
@@ -77,6 +97,20 @@ function App() {
             <Link to="/series" className="nav-link">
               TV Series
             </Link>
+            <select
+              onChange={handleGenreChange}
+              className="genre-dropdown"
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Select Genre
+              </option>
+              {genres.map((genre) => (
+                <option key={genre.id} value={genre.id}>
+                  {genre.name}
+                </option>
+              ))}
+            </select>
           </nav>
         </header>
 
