@@ -265,3 +265,25 @@ nav {
   color: #ccc;
   margin: 10px 0;
 }
+
+/* Add this at the end of App.css */
+.genre-dropdown {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2a2d3a;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.genre-dropdown option {
+  background-color: #1a1d29;
+  color: white;
+}
+
+.genre-dropdown:focus {
+  outline: none;
+  border: 1px solid #ff0000;
+}
