@@ -141,7 +141,7 @@ function App() {
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
-    timerRef.current = setInterval(nextMovie, 10000); // Auto-transition every 15 seconds
+    timerRef.current = setInterval(nextMovie, 8000); 
   };
 
   useEffect(() => {
@@ -156,7 +156,7 @@ function App() {
       <div className="app-container">
         <header className="header">
           <Link to="/" className="logo">
-           Movies
+            StackMasters
           </Link>
           <nav>
             <Link to="/" className="nav-link active">
@@ -174,7 +174,7 @@ function App() {
               defaultValue=""
             >
               <option value="" disabled>
-               Genre
+                Select Genre
               </option>
               {genres.map((genre) => (
                 <option key={genre.id} value={genre.id}>
