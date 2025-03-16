@@ -259,26 +259,54 @@ nav {
   background-color: #2a2d3a;
 }
 
-/* Genre Dropdown */
-.genre-dropdown {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #2a2d3a;
-  color: white;
-  font-size: 16px;
+/* Genre Dropdown (Removed original select styles since we use custom dropdown now) */
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-trigger {
+  color: #fff;
   cursor: pointer;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #2a2d3a; /* Match search input background */
+  border-radius: 5px;
   margin-left: 10px;
 }
 
-.genre-dropdown option {
-  background-color: #1a1d29;
-  color: white;
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  min-width: 150px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 4px;
+  top: 100%;
+  right: 0;
 }
 
-.genre-dropdown:focus {
-  outline: none;
-  border: 1px solid #ff0000;
+.dropdown-item {
+  color: #fff;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #ff0000; /* Match active link hover */
+}
+
+.custom-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-trigger:hover {
+  background-color: #333; /* Slight darken on hover */
 }
 
 /* Error and Loading */

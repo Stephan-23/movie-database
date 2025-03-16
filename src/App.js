@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
 import SearchBar from './components/searchBar';
 import MovieCard from './components/movieCard';
 import MovieDetails from './components/movieDetails';
@@ -96,8 +96,7 @@ function App() {
     { id: 99, name: 'Documentary' },
   ];
 
-  const handleGenreChange = (event) => {
-    const genreId = event.target.value;
+  const handleGenreChange = (genreId) => {
     setSelectedGenre(genreId);
   };
 
@@ -141,7 +140,7 @@ function App() {
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
-    timerRef.current = setInterval(nextMovie, 8000); 
+    timerRef.current = setInterval(nextMovie, 8000);
   };
 
   useEffect(() => {
@@ -155,33 +154,42 @@ function App() {
     <Router>
       <div className="app-container">
         <header className="header">
-          <Link to="/" className="logo">
+          <NavLink to="/" className="logo">
             StackMasters
-          </Link>
+          </NavLink>
           <nav>
-            <Link to="/" className="nav-link active">
-              Home
-            </Link>
-            <Link to="/movies" className="nav-link">
-              Movies
-            </Link>
-            <Link to="/series" className="nav-link">
-              TV Series
-            </Link>
-            <select
-              onChange={handleGenreChange}
-              className="genre-dropdown"
-              defaultValue=""
+            <NavLink
+              to="/"
+              className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
             >
-              <option value="" disabled>
-                Select Genre
-              </option>
-              {genres.map((genre) => (
-                <option key={genre.id} value={genre.id}>
-                  {genre.name}
-                </option>
-              ))}
-            </select>
+              Home
+            </NavLink>
+            <NavLink
+              to="/movies"
+              className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+            >
+              Movies
+            </NavLink>
+            <NavLink
+              to="/series"
+              className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+            >
+              TV Series
+            </NavLink>
+            <div className="custom-dropdown">
+              <span className="dropdown-trigger">Select Genre</span>
+              <div className="dropdown-content">
+                {genres.map((genre) => (
+                  <div
+                    key={genre.id}
+                    className="dropdown-item"
+                    onClick={() => handleGenreChange(genre.id)}
+                  >
+                    {genre.name}
+                  </div>
+                ))}
+              </div>
+            </div>
           </nav>
         </header>
 
@@ -220,13 +228,13 @@ function App() {
                     <h2>Search Results</h2>
                     <div className="movie-list">
                       {searchResults.map((item) => (
-                        <Link
+                        <NavLink
                           key={item.id}
                           to={`/movie/${item.id}`}
                           className="movie-card"
                         >
                           <MovieCard movie={item} />
-                        </Link>
+                        </NavLink>
                       ))}
                     </div>
                   </section>
@@ -239,13 +247,13 @@ function App() {
                     </h2>
                     <div className="movie-list">
                       {genreMovies.map((movie) => (
-                        <Link
+                        <NavLink
                           key={movie.id}
                           to={`/movie/${movie.id}`}
                           className="movie-card"
                         >
                           <MovieCard movie={movie} />
-                        </Link>
+                        </NavLink>
                       ))}
                     </div>
                   </section>
@@ -255,13 +263,13 @@ function App() {
                   <h2>Trending movies</h2>
                   <div className="movie-list">
                     {trendingMovies.map((movie) => (
-                      <Link
+                      <NavLink
                         key={movie.id}
                         to={`/movie/${movie.id}`}
                         className="movie-card"
                       >
                         <MovieCard movie={movie} />
-                      </Link>
+                      </NavLink>
                     ))}
                   </div>
                 </section>
@@ -270,13 +278,13 @@ function App() {
                   <h2>Top rated movies</h2>
                   <div className="movie-list">
                     {topRatedMovies.map((movie) => (
-                      <Link
+                      <NavLink
                         key={movie.id}
                         to={`/movie/${movie.id}`}
                         className="movie-card"
                       >
                         <MovieCard movie={movie} />
-                      </Link>
+                      </NavLink>
                     ))}
                   </div>
                   <a href="#" className="view-all">
@@ -288,13 +296,13 @@ function App() {
                   <h2>Top rated series</h2>
                   <div className="movie-list">
                     {topRatedSeries.map((series) => (
-                      <Link
+                      <NavLink
                         key={series.id}
                         to={`/series/${series.id}`}
                         className="movie-card"
                       >
                         <MovieCard movie={series} />
-                      </Link>
+                      </NavLink>
                     ))}
                   </div>
                   <a href="#" className="view-all">
