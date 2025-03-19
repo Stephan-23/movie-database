@@ -542,3 +542,28 @@ nav {
   color: #666;
   margin: 20px 0;
 }
+
+/* Series Page */
+.series-page {
+  padding: 20px;
+}
+
+.series-page h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  border-left: 4px solid red;
+  padding-left: 10px;
+}
+
+.series-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.series-card {
+  text-decoration: none;
+  color: white;
+  display: block;
+}
