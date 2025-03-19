@@ -501,3 +501,44 @@ nav {
   color: white;
   font-weight: bold;
 }
+
+/* Movies Page */
+.movies-page {
+  padding: 20px;
+}
+
+.movies-page h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  border-left: 4px solid red;
+  padding-left: 10px;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.view-more-button {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 20px;
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.view-more-button:hover {
+  background-color: #cc0000;
+}
+
+.no-more {
+  text-align: center;
+  color: #666;
+  margin: 20px 0;
+}

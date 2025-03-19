@@ -191,7 +191,7 @@ function App() {
       <div className="app-container">
         <header className="header">
           <NavLink to="/" className="logo">
-            StackMasters
+            TDmovies
           </NavLink>
           <nav>
             <NavLink
