@@ -3,13 +3,14 @@ import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-do
 import SearchBar from './components/searchBar';
 import MovieCard from './components/movieCard';
 import MovieDetails from './components/movieDetails';
+import MoviesPage from './components/MoviesPage'; // Import the new component
 import {
   getTrendingMovies,
   getTopRatedMovies,
   getTopRatedSeries,
   searchMovies,
   getMoviesByGenre,
-  getMovieVideos, // Import the new function
+  getMovieVideos,
 } from './api';
 import './App.css';
 
@@ -23,8 +24,8 @@ function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
-  const [trailerUrl, setTrailerUrl] = useState(''); // State for trailer URL
-  const [showModal, setShowModal] = useState(false); // State for modal visibility
+  const [trailerUrl, setTrailerUrl] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -70,21 +71,19 @@ function App() {
     fetchMoviesByGenre();
   }, [selectedGenre]);
 
-  // Fetch trailer for the featured movie
   const featuredMovie = trendingMovies[currentMovieIndex] || {};
   useEffect(() => {
     const fetchTrailer = async () => {
       if (featuredMovie.id) {
         try {
           const videos = await getMovieVideos(featuredMovie.id);
-          // Find the first trailer or teaser
           const trailer = videos.find(
             (video) => video.type === 'Trailer' || video.type === 'Teaser'
           );
           if (trailer && trailer.site === 'YouTube') {
             setTrailerUrl(`https://www.youtube.com/embed/${trailer.key}?autoplay=1`);
           } else {
-            setTrailerUrl(''); // No trailer found
+            setTrailerUrl('');
           }
         } catch (error) {
           console.error('Error fetching trailer:', error);
@@ -93,7 +92,7 @@ function App() {
       }
     };
     fetchTrailer();
-  }, [featuredMovie.id]); // Fetch trailer when featuredMovie changes
+  }, [featuredMovie.id]);
 
   const handleSearch = async (query) => {
     setLoading(true);
@@ -174,7 +173,6 @@ function App() {
     return () => clearInterval(timerRef.current);
   }, [trendingMovies]);
 
-  // Handle Watch Trailer button click
   const handleWatchTrailer = () => {
     if (trailerUrl) {
       setShowModal(true);
@@ -183,10 +181,9 @@ function App() {
     }
   };
 
-  // Close the modal
   const closeModal = () => {
     setShowModal(false);
-    setTrailerUrl(''); // Reset trailer URL to stop playback
+    setTrailerUrl('');
   };
 
   return (
@@ -264,12 +261,11 @@ function App() {
                   </div>
                 )}
 
-                {/* Modal for Trailer */}
                 {showModal && (
                   <div className="modal">
                     <div className="modal-content">
                       <span className="close-modal" onClick={closeModal}>
-                        &times;
+                        ×
                       </span>
                       {trailerUrl ? (
                         <iframe
@@ -386,7 +382,10 @@ function App() {
             }
           />
           <Route path="/series/:id" element={<div>Series Details (Coming Soon)</div>} />
-          <Route path="/movies" element={<div>Movies Page (Coming Soon)</div>} />
+          <Route
+            path="/movies"
+            element={<MoviesPage selectedGenre={selectedGenre} />}
+          />
           <Route path="/series" element={<div>TV Series Page (Coming Soon)</div>} />
         </Routes>
       </div>
