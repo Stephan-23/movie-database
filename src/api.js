@@ -83,3 +83,35 @@ export const getMovieVideos = async (movieId) => {
     throw error;
   }
 };
+
+// Get series trailer
+export const getSeriesVideos = async (seriesId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/tv/${seriesId}/videos`, {
+      params: {
+        api_key: API_KEY,
+        language: 'en-US',
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error('Error fetching series videos:', error);
+    throw error;
+  }
+};
+
+// Fetch series details by ID
+export const getSeriesDetails = async (seriesId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/tv/${seriesId}`, {
+      params: {
+        api_key: API_KEY,
+        language: 'en-US',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching series details:', error);
+    throw error;
+  }
+};

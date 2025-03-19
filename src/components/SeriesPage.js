@@ -14,6 +14,9 @@ function SeriesPage({ selectedGenre }) {
     setLoading(true);
     setError(null);
     try {
+      // Add a small delay to avoid hitting TMDb rate limits (40 requests per 10 seconds)
+      await new Promise((resolve) => setTimeout(resolve, 250));
+
       let fetchedSeries;
       if (genreId) {
         fetchedSeries = await getSeriesByGenre(genreId, pageNum);
@@ -21,17 +24,23 @@ function SeriesPage({ selectedGenre }) {
         fetchedSeries = await getTopRatedSeries(pageNum);
       }
 
+      console.log('Fetched series:', fetchedSeries); // Log the fetched data for debugging
+
       if (reset) {
-        setSeries(fetchedSeries);
+        setSeries(fetchedSeries || []);
       } else {
-        setSeries((prev) => [...prev, ...fetchedSeries]);
+        setSeries((prev) => [...prev, ...(fetchedSeries || [])]);
       }
 
       // TMDb API typically returns 20 items per page. If fewer than 20 are returned, there are no more items.
-      setHasMore(fetchedSeries.length === 20);
+      setHasMore(fetchedSeries && fetchedSeries.length === 20);
     } catch (err) {
-      console.error('Error fetching series:', err);
-      setError('Failed to load TV series. Please try again.');
+      console.error('Error fetching series:', err.response ? err.response.data : err.message);
+      if (err.response && err.response.status === 429) {
+        setError('Rate limit exceeded. Please wait a moment and try again.');
+      } else {
+        setError('Failed to load TV series. Please try again.');
+      }
       setHasMore(false);
     } finally {
       setLoading(false);
@@ -59,6 +68,9 @@ function SeriesPage({ selectedGenre }) {
     <div className="series-page">
       <h2>{selectedGenre ? 'TV Series by Genre' : 'All TV Series'}</h2>
       {error && <p className="error">{error}</p>}
+      {series.length === 0 && !loading && !error && (
+        <p>No TV series found.</p>
+      )}
       <div className="series-grid">
         {series.map((show) => (
           <NavLink
