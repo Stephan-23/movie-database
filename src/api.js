@@ -21,39 +21,54 @@ export const getTopRatedMovies = async () => {
   });
   return response.data.results;
 };
- 
-//Fetch trendingMovies
-export const getTrendingMovies = async () => {
+
+// Fetch trending movies with pagination
+export const getTrendingMovies = async (page = 1) => {
   const response = await axios.get(`${BASE_URL}/trending/movie/week`, {
     params: {
       api_key: API_KEY,
+      page: page,
     },
   });
   return response.data.results;
 };
 
-// Fetch top-rated TV shows
-export const getTopRatedSeries = async () => {
+// Fetch top-rated TV shows with pagination
+export const getTopRatedSeries = async (page = 1) => {
   const response = await axios.get(`${BASE_URL}/tv/top_rated`, {
     params: {
       api_key: API_KEY,
+      page: page,
     },
   });
   return response.data.results;
 };
 
-// Fetch movies by genre
-export const getMoviesByGenre = async (genreId) => {
+// Fetch movies by genre with pagination
+export const getMoviesByGenre = async (genreId, page = 1) => {
   const response = await axios.get(`${BASE_URL}/discover/movie`, {
     params: {
       api_key: API_KEY,
       with_genres: genreId,
+      page: page,
     },
   });
   return response.data.results;
 };
 
-//Get movie trailer
+// Fetch TV series by genre with pagination
+export const getSeriesByGenre = async (genreId, page = 1) => {
+  const response = await axios.get(`${BASE_URL}/discover/tv`, {
+    params: {
+      api_key: API_KEY,
+      with_genres: genreId,
+      page: page,
+    },
+  });
+  return response.data.results;
+};
+
+// Get movie trailer
 export const getMovieVideos = async (movieId) => {
   try {
     const response = await axios.get(`${BASE_URL}/movie/${movieId}/videos`, {
@@ -62,9 +77,9 @@ export const getMovieVideos = async (movieId) => {
         language: 'en-US',
       },
     });
-    return response.data.results; // Returns an array of videos (trailers, teasers, etc.)
+    return response.data.results;
   } catch (error) {
     console.error('Error fetching movie videos:', error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error;
   }
 };
