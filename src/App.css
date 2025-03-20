@@ -9,6 +9,7 @@ body {
 .app-container {
   max-width: 1400px;
   margin: 0 auto;
+  padding: 0 15px; /* Add padding for smaller screens */
 }
 
 /* Header */
@@ -24,7 +25,7 @@ body {
 }
 
 .logo {
-  font-size: 24px;
+  font-size: 1.5rem; /* Use rem for scalability */
   font-weight: bold;
   color: white;
   text-decoration: none;
@@ -45,7 +46,7 @@ nav {
 .nav-link {
   color: white;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .nav-link.active {
@@ -54,6 +55,16 @@ nav {
 
 .nav-link:hover {
   color: #ccc;
+}
+
+/* Hamburger Menu */
+.hamburger {
+  display: none; /* Hidden by default on larger screens */
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
 }
 
 /* Search Bar */
@@ -65,10 +76,11 @@ nav {
 
 .search-form input {
   padding: 10px;
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   border: none;
   border-radius: 5px 0 0 5px;
-  font-size: 16px;
+  font-size: 1rem;
   background-color: #2a2d3a;
   color: white;
 }
@@ -84,7 +96,7 @@ nav {
   background-color: #ff0000;
   color: white;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .search-form button:hover {
@@ -99,7 +111,7 @@ nav {
   background-position: center;
   display: flex;
   align-items: flex-end;
-  padding: 40px;
+  padding: 40px 20px;
   margin-bottom: 20px;
   transition: background-image 0.5s ease;
 }
@@ -120,13 +132,13 @@ nav {
 }
 
 .hero-content h1 {
-  font-size: 48px;
+  font-size: 3rem;
   margin: 0 0 10px;
   color: white;
 }
 
 .hero-content p {
-  font-size: 16px;
+  font-size: 1rem;
   margin: 0 0 20px;
   color: #ddd;
 }
@@ -142,7 +154,7 @@ nav {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .watch-trailer {
@@ -180,7 +192,7 @@ nav {
   padding: 20px;
   border-radius: 5px;
   position: relative;
-  width: 80%;
+  width: 90%;
   max-width: 800px;
 }
 
@@ -188,7 +200,7 @@ nav {
   position: absolute;
   top: 10px;
   right: 15px;
-  font-size: 30px;
+  font-size: 1.5rem;
   color: white;
   cursor: pointer;
 }
@@ -204,7 +216,7 @@ nav {
 }
 
 .section h2 {
-  font-size: 24px;
+  font-size: 1.5rem;
   margin-bottom: 10px;
   border-left: 4px solid red;
   padding-left: 10px;
@@ -269,7 +281,7 @@ nav {
 }
 
 .movie-info p {
-  font-size: 12px;
+  font-size: 0.75rem;
   margin: 0;
   color: #ddd;
   display: -webkit-box;
@@ -285,7 +297,7 @@ nav {
   right: 0;
   color: white;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 0.875rem;
   padding: 5px 10px;
   border: 1px solid #888;
   border-radius: 20px;
@@ -305,7 +317,7 @@ nav {
   color: #fff;
   cursor: pointer;
   padding: 10px;
-  font-size: 16px;
+  font-size: 1rem;
   background-color: #2a2d3a;
   border-radius: 5px;
   margin-left: 10px;
@@ -348,11 +360,12 @@ nav {
   color: red;
   text-align: center;
   margin: 20px 0;
+  font-size: 1rem;
 }
 
 .loading {
   text-align: center;
-  font-size: 18px;
+  font-size: 1.125rem;
   color: #666;
   margin: 20px 0;
 }
@@ -361,7 +374,7 @@ nav {
 .movie-details {
   padding: 40px 20px;
   position: relative;
-  min-height: 600px; /* Ensure the section has enough height for the background */
+  min-height: 600px;
 }
 
 .movie-details::before {
@@ -380,7 +393,7 @@ nav {
   margin-bottom: 20px;
   color: #007bff;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 1rem;
   position: relative;
   z-index: 1;
 }
@@ -430,7 +443,7 @@ nav {
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  font-size: 24px;
+  font-size: 1.5rem;
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -465,7 +478,7 @@ nav {
   border-radius: 50%;
   width: 30px;
   height: 30px;
-  font-size: 16px;
+  font-size: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -484,14 +497,14 @@ nav {
 }
 
 .movie-info-details h2 {
-  font-size: 36px;
+  font-size: 2.25rem;
   margin: 0 0 15px;
   color: white;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .movie-info-details p {
-  font-size: 16px;
+  font-size: 1rem;
   margin: 10px 0;
   color: #ddd;
   line-height: 1.5;
@@ -508,7 +521,7 @@ nav {
 }
 
 .movies-page h2 {
-  font-size: 24px;
+  font-size: 1.5rem;
   margin-bottom: 20px;
   border-left: 4px solid red;
   padding-left: 10px;
@@ -530,17 +543,7 @@ nav {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-}
-
-.view-more-button:hover {
-  background-color: #cc0000;
-}
-
-.no-more {
-  text-align: center;
-  color: #666;
-  margin: 20px 0;
+  font-size: 1rem;
 }
 
 /* Series Page */
@@ -549,7 +552,7 @@ nav {
 }
 
 .series-page h2 {
-  font-size: 24px;
+  font-size: 1.5rem;
   margin-bottom: 20px;
   border-left: 4px solid red;
   padding-left: 10px;
@@ -566,4 +569,244 @@ nav {
   text-decoration: none;
   color: white;
   display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Header */
+  .header {
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+  nav {
+    display: none; /* Hide nav by default on mobile */
+    flex-direction: column;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    position: absolute;
+    top: 60px;
+    left: 0;
+    padding: 10px 0;
+  }
+
+  nav.active {
+    display: flex; /* Show nav when active */
+  }
+
+  .nav-link {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  .hamburger {
+    display: block; /* Show hamburger menu on mobile */
+  }
+
+  .custom-dropdown {
+    width: 100%;
+    text-align: center;
+  }
+
+  .dropdown-trigger {
+    margin-left: 0;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .dropdown-content {
+    width: 100%;
+    right: 0;
+  }
+
+  /* Search Bar */
+  .search-form {
+    padding: 15px 10px;
+  }
+
+  .search-form input {
+    max-width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .search-form button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  /* Hero Section */
+  .hero {
+    height: 300px;
+    padding: 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero-content p {
+    font-size: 0.875rem;
+  }
+
+  .watch-trailer,
+  .watch-now {
+    padding: 8px 15px;
+    font-size: 0.875rem;
+  }
+
+  /* Modal */
+  .modal-content {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .modal-content iframe {
+    height: 200px;
+  }
+
+  /* Sections */
+  .section h2 {
+    font-size: 1.25rem;
+  }
+
+  .movie-list {
+    gap: 10px;
+  }
+
+  .movie-card-container {
+    width: 120px;
+  }
+
+  .movie-info p {
+    font-size: 0.7rem;
+  }
+
+  .view-all {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+
+  /* Movie Details */
+  .movie-details {
+    padding: 20px 10px;
+    min-height: 400px;
+  }
+
+  .movie-details-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .movie-poster {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .play-button {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+  .movie-info-details h2 {
+    font-size: 1.5rem;
+  }
+
+  .movie-info-details p {
+    font-size: 0.9rem;
+  }
+
+  /* Movies/Series Pages */
+  .movies-page,
+  .series-page {
+    padding: 10px;
+  }
+
+  .movies-page h2,
+  .series-page h2 {
+    font-size: 1.25rem;
+  }
+
+  .movie-grid,
+  .series-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+
+  .view-more-button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Header */
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .hamburger {
+    font-size: 1.2rem;
+  }
+
+  /* Hero Section */
+  .hero {
+    height: 250px;
+    padding: 15px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.2rem;
+  }
+
+  .hero-content p {
+    font-size: 0.75rem;
+  }
+
+  .watch-trailer,
+  .watch-now {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
+  /* Modal */
+  .modal-content iframe {
+    height: 150px;
+  }
+
+  /* Movie Details */
+  .movie-poster {
+    max-width: 200px;
+  }
+
+  .play-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .movie-info-details h2 {
+    font-size: 1.2rem;
+  }
+
+  .movie-info-details p {
+    font-size: 0.8rem;
+  }
+
+  /* Movies/Series Pages */
+  .movie-grid,
+  .series-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+  }
+
+  .movie-card-container {
+    width: 100px;
+  }
+
+  .movie-info p {
+    font-size: 0.65rem;
+  }
 }
