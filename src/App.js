@@ -5,7 +5,7 @@ import MovieCard from './components/movieCard';
 import MovieDetails from './components/movieDetails';
 import MoviesPage from './components/MoviesPage';
 import SeriesPage from './components/SeriesPage';
-import SeriesDetails from './components/SeriesDetails'; // Import the new component
+import SeriesDetails from './components/SeriesDetails';
 import {
   getTrendingMovies,
   getTopRatedMovies,
@@ -21,7 +21,6 @@ function App() {
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [topRatedSeries, setTopRatedSeries] = useState([]);
-  const [allSeries, setAllSeries] = useState([]); // New state to store all series
   const [genreSeries, setGenreSeries] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [genreMovies, setGenreMovies] = useState([]);
@@ -31,6 +30,7 @@ function App() {
   const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
   const [trailerUrl, setTrailerUrl] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // State for hamburger menu
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -46,7 +46,6 @@ function App() {
         setTrendingMovies(trending);
         setTopRatedMovies(topRated);
         setTopRatedSeries(topRatedTv);
-        setAllSeries(topRatedTv); // Initialize allSeries with topRatedSeries
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Something went wrong. Please try again.');
@@ -82,7 +81,6 @@ function App() {
         try {
           const series = await getSeriesByGenre(selectedGenre);
           setGenreSeries(series);
-          setAllSeries((prev) => [...new Map([...prev, ...series].map(item => [item.id, item])).values()]); // Update allSeries with unique series
         } catch (error) {
           console.error('Error fetching series by genre:', error);
           setError('No series found for this genre.');
@@ -96,11 +94,6 @@ function App() {
     fetchMoviesByGenre();
     fetchSeriesByGenre();
   }, [selectedGenre]);
-
-  // Callback to update allSeries from SeriesPage
-  const updateSeries = (newSeries) => {
-    setAllSeries((prev) => [...new Map([...prev, ...newSeries].map(item => [item.id, item])).values()]);
-  };
 
   const featuredMovie = trendingMovies[currentMovieIndex] || {};
   useEffect(() => {
@@ -217,29 +210,39 @@ function App() {
     setTrailerUrl('');
   };
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <Router>
       <div className="app-container">
         <header className="header">
           <NavLink to="/" className="logo">
-             TDMovies
+            TDMovies
           </NavLink>
-          <nav>
+          <button className="hamburger" onClick={toggleMenu}>
+            ☰
+          </button>
+          <nav className={menuOpen ? 'active' : ''}>
             <NavLink
               to="/"
               className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+              onClick={toggleMenu}
             >
               Home
             </NavLink>
             <NavLink
               to="/movies"
               className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+              onClick={toggleMenu}
             >
               Movies
             </NavLink>
             <NavLink
               to="/series"
               className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+              onClick={toggleMenu}
             >
               TV Series
             </NavLink>
@@ -250,7 +253,10 @@ function App() {
                   <div
                     key={genre.id}
                     className="dropdown-item"
-                    onClick={() => handleGenreChange(genre.id)}
+                    onClick={() => {
+                      handleGenreChange(genre.id);
+                      toggleMenu();
+                    }}
                   >
                     {genre.name}
                   </div>
@@ -393,7 +399,7 @@ function App() {
                         to={`/series/${series.id}`}
                         className="movie-card"
                       >
-                        <MovieCard movie={series} />
+                        <MovieCard movie={{ ...series, media_type: 'tv' }} />
                       </NavLink>
                     ))}
                   </div>
@@ -412,22 +418,14 @@ function App() {
               />
             }
           />
-          <Route
-            path="/series/:id"
-            element={<SeriesDetails series={allSeries} />}
-          />
+          <Route path="/series/:id" element={<SeriesDetails />} />
           <Route
             path="/movies"
             element={<MoviesPage selectedGenre={selectedGenre} />}
           />
           <Route
             path="/series"
-            element={
-              <SeriesPage
-                selectedGenre={selectedGenre}
-                updateSeries={updateSeries}
-              />
-            }
+            element={<SeriesPage selectedGenre={selectedGenre} />}
           />
         </Routes>
       </div>
