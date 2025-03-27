@@ -18,7 +18,7 @@ import {
 import { auth, signInWithGoogle, logOut, addToWatchlist, removeFromWatchlist, getWatchlist } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import './App.css';
-import 'Recom.css';
+import './Recom.css';
 
 function App() {
   const [trendingMovies, setTrendingMovies] = useState([]);
@@ -365,7 +365,7 @@ function App() {
               TV Series
             </NavLink>
             <div className="custom-dropdown">
-              <span className="dropdown-trigger">Select Genre</span>
+              <span className="dropdown-trigger">Genre</span>
               <div className="dropdown-content">
                 {genres.map((genre) => (
                   <div
@@ -391,7 +391,7 @@ function App() {
                 </>
               ) : (
                 <button className="auth-button" onClick={handleLogin}>
-                  Login with Google
+                  Login
                 </button>
               )}
             </div>
