@@ -15,6 +15,8 @@ import {
   getSeriesByGenre,
   getMovieVideos,
 } from './api';
+import { auth, signInWithGoogle, logOut } from './firebase'; // Import Firebase auth functions
+import { onAuthStateChanged } from 'firebase/auth'; // To track auth state
 import './App.css';
 
 function App() {
@@ -31,7 +33,16 @@ function App() {
   const [trailerUrl, setTrailerUrl] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // State for hamburger menu
+  const [user, setUser] = useState(null); // State to track logged-in user
   const timerRef = useRef(null);
+
+  // Monitor authentication state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -214,6 +225,27 @@ function App() {
     setMenuOpen(!menuOpen);
   };
 
+  // Handle login and logout
+  const handleLogin = async () => {
+    try {
+      await signInWithGoogle();
+      setMenuOpen(false); // Close menu after login
+    } catch (error) {
+      console.error('Error signing in:', error);
+      setError('Failed to sign in. Please try again.');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      setMenuOpen(false); // Close menu after logout
+    } catch (error) {
+      console.error('Error signing out:', error);
+      setError('Failed to sign out. Please try again.');
+    }
+  };
+
   return (
     <Router>
       <div className="app-container">
@@ -262,6 +294,21 @@ function App() {
                   </div>
                 ))}
               </div>
+            </div>
+            {/* Add Login/Logout Button */}
+            <div className="auth-section">
+              {user ? (
+                <>
+                  <span className="user-name">Hello, {user.displayName}</span>
+                  <button className="auth-button" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <button className="auth-button" onClick={handleLogin}>
+                  Login with Google
+                </button>
+              )}
             </div>
           </nav>
         </header>
