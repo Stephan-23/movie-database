@@ -15,8 +15,8 @@ import {
   getSeriesByGenre,
   getMovieVideos,
 } from './api';
-import { auth, signInWithGoogle, logOut } from './firebase'; // Import Firebase auth functions
-import { onAuthStateChanged } from 'firebase/auth'; // To track auth state
+import { auth, signInWithGoogle, logOut, addToWatchlist, removeFromWatchlist, getWatchlist } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import './App.css';
 
 function App() {
@@ -34,12 +34,23 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // State for hamburger menu
   const [user, setUser] = useState(null); // State to track logged-in user
+  const [watchlist, setWatchlist] = useState([]); // State for watchlist
   const timerRef = useRef(null);
 
-  // Monitor authentication state
+  // Monitor authentication state and fetch watchlist
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        try {
+          const userWatchlist = await getWatchlist(currentUser.uid);
+          setWatchlist(userWatchlist);
+        } catch (error) {
+          setError('Failed to fetch watchlist.');
+        }
+      } else {
+        setWatchlist([]); // Clear watchlist on logout
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -246,6 +257,29 @@ function App() {
     }
   };
 
+  // Add/Remove from Watchlist
+  const handleAddToWatchlist = async (item) => {
+    if (!user) {
+      alert('Please log in to add to your watchlist.');
+      return;
+    }
+    try {
+      await addToWatchlist(user.uid, item);
+      setWatchlist([...watchlist, item]);
+    } catch (error) {
+      setError('Failed to add to watchlist.');
+    }
+  };
+
+  const handleRemoveFromWatchlist = async (item) => {
+    try {
+      await removeFromWatchlist(user.uid, item);
+      setWatchlist(watchlist.filter((watchlistItem) => watchlistItem.id !== item.id));
+    } catch (error) {
+      setError('Failed to remove from watchlist.');
+    }
+  };
+
   return (
     <Router>
       <div className="app-container">
@@ -295,7 +329,6 @@ function App() {
                 ))}
               </div>
             </div>
-            {/* Add Login/Logout Button */}
             <div className="auth-section">
               {user ? (
                 <>
@@ -340,6 +373,23 @@ function App() {
                           Watch trailer
                         </button>
                         <button className="watch-now">Watch now</button>
+                        {user && (
+                          watchlist.some((item) => item.id === featuredMovie.id) ? (
+                            <button
+                              className="watchlist-button"
+                              onClick={() => handleRemoveFromWatchlist(featuredMovie)}
+                            >
+                              Remove from Watchlist
+                            </button>
+                          ) : (
+                            <button
+                              className="watchlist-button"
+                              onClick={() => handleAddToWatchlist(featuredMovie)}
+                            >
+                              Add to Watchlist
+                            </button>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
@@ -368,18 +418,58 @@ function App() {
                   </div>
                 )}
 
+                {/* Watchlist Section */}
+                {user && watchlist.length > 0 && (
+                  <section className="section">
+                    <h2>Your Watchlist</h2>
+                    <div className="movie-list">
+                      {watchlist.map((item) => (
+                        <div key={item.id} className="movie-card-container">
+                          <NavLink
+                            to={item.media_type === 'tv' ? `/series/${item.id}` : `/movie/${item.id}`}
+                            className="movie-card"
+                          >
+                            <MovieCard movie={item} />
+                          </NavLink>
+                          <button
+                            className="watchlist-remove-button"
+                            onClick={() => handleRemoveFromWatchlist(item)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
                 {searchResults.length > 0 && (
                   <section className="section">
                     <h2>Search Results</h2>
                     <div className="movie-list">
                       {searchResults.map((item) => (
-                        <NavLink
-                          key={item.id}
-                          to={`/movie/${item.id}`}
-                          className="movie-card"
-                        >
-                          <MovieCard movie={item} />
-                        </NavLink>
+                        <div key={item.id} className="movie-card-container">
+                          <NavLink to={`/movie/${item.id}`} className="movie-card">
+                            <MovieCard movie={item} />
+                          </NavLink>
+                          {user && (
+                            watchlist.some((watchlistItem) => watchlistItem.id === item.id) ? (
+                              <button
+                                className="watchlist-remove-button"
+                                onClick={() => handleRemoveFromWatchlist(item)}
+                              >
+                                Remove
+                              </button>
+                            ) : (
+                              <button
+                                className="watchlist-button"
+                                onClick={() => handleAddToWatchlist(item)}
+                              >
+                                Add to Watchlist
+                              </button>
+                            )
+                          )}
+                        </div>
                       ))}
                     </div>
                   </section>
@@ -392,13 +482,28 @@ function App() {
                     </h2>
                     <div className="movie-list">
                       {genreMovies.map((movie) => (
-                        <NavLink
-                          key={movie.id}
-                          to={`/movie/${movie.id}`}
-                          className="movie-card"
-                        >
-                          <MovieCard movie={movie} />
-                        </NavLink>
+                        <div key={movie.id} className="movie-card-container">
+                          <NavLink to={`/movie/${movie.id}`} className="movie-card">
+                            <MovieCard movie={movie} />
+                          </NavLink>
+                          {user && (
+                            watchlist.some((item) => item.id === movie.id) ? (
+                              <button
+                                className="watchlist-remove-button"
+                                onClick={() => handleRemoveFromWatchlist(movie)}
+                              >
+                                Remove
+                              </button>
+                            ) : (
+                              <button
+                                className="watchlist-button"
+                                onClick={() => handleAddToWatchlist(movie)}
+                              >
+                                Add to Watchlist
+                              </button>
+                            )
+                          )}
+                        </div>
                       ))}
                     </div>
                   </section>
@@ -408,13 +513,28 @@ function App() {
                   <h2>Trending movies</h2>
                   <div className="movie-list">
                     {trendingMovies.map((movie) => (
-                      <NavLink
-                        key={movie.id}
-                        to={`/movie/${movie.id}`}
-                        className="movie-card"
-                      >
-                        <MovieCard movie={movie} />
-                      </NavLink>
+                      <div key={movie.id} className="movie-card-container">
+                        <NavLink to={`/movie/${movie.id}`} className="movie-card">
+                          <MovieCard movie={movie} />
+                        </NavLink>
+                        {user && (
+                          watchlist.some((item) => item.id === movie.id) ? (
+                            <button
+                              className="watchlist-remove-button"
+                              onClick={() => handleRemoveFromWatchlist(movie)}
+                            >
+                              Remove
+                            </button>
+                          ) : (
+                            <button
+                              className="watchlist-button"
+                              onClick={() => handleAddToWatchlist(movie)}
+                            >
+                              Add to Watchlist
+                            </button>
+                          )
+                        )}
+                      </div>
                     ))}
                   </div>
                 </section>
@@ -423,13 +543,28 @@ function App() {
                   <h2>Top rated movies</h2>
                   <div className="movie-list">
                     {topRatedMovies.map((movie) => (
-                      <NavLink
-                        key={movie.id}
-                        to={`/movie/${movie.id}`}
-                        className="movie-card"
-                      >
-                        <MovieCard movie={movie} />
-                      </NavLink>
+                      <div key={movie.id} className="movie-card-container">
+                        <NavLink to={`/movie/${movie.id}`} className="movie-card">
+                          <MovieCard movie={movie} />
+                        </NavLink>
+                        {user && (
+                          watchlist.some((item) => item.id === movie.id) ? (
+                            <button
+                              className="watchlist-remove-button"
+                              onClick={() => handleRemoveFromWatchlist(movie)}
+                            >
+                              Remove
+                            </button>
+                          ) : (
+                            <button
+                              className="watchlist-button"
+                              onClick={() => handleAddToWatchlist(movie)}
+                            >
+                              Add to Watchlist
+                            </button>
+                          )
+                        )}
+                      </div>
                     ))}
                   </div>
                   <a href="#" className="view-all">
@@ -441,13 +576,28 @@ function App() {
                   <h2>Top rated series</h2>
                   <div className="movie-list">
                     {topRatedSeries.map((series) => (
-                      <NavLink
-                        key={series.id}
-                        to={`/series/${series.id}`}
-                        className="movie-card"
-                      >
-                        <MovieCard movie={{ ...series, media_type: 'tv' }} />
-                      </NavLink>
+                      <div key={series.id} className="movie-card-container">
+                        <NavLink to={`/series/${series.id}`} className="movie-card">
+                          <MovieCard movie={{ ...series, media_type: 'tv' }} />
+                        </NavLink>
+                        {user && (
+                          watchlist.some((item) => item.id === series.id) ? (
+                            <button
+                              className="watchlist-remove-button"
+                              onClick={() => handleRemoveFromWatchlist(series)}
+                            >
+                              Remove
+                            </button>
+                          ) : (
+                            <button
+                              className="watchlist-button"
+                              onClick={() => handleAddToWatchlist({ ...series, media_type: 'tv' })}
+                            >
+                              Add to Watchlist
+                            </button>
+                          )
+                        )}
+                      </div>
                     ))}
                   </div>
                   <a href="#" className="view-all">
