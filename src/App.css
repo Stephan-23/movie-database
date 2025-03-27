@@ -196,6 +196,7 @@ nav {
 .hero-buttons {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
 }
 
 .watch-trailer,
@@ -272,6 +273,25 @@ nav {
   padding-left: 10px;
 }
 
+/* Watchlist Section */
+.watchlist-section {
+  margin-bottom: 40px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.05); /* Subtle background to distinguish the section */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Add depth with shadow */
+}
+
+.watchlist-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  border-left: 4px solid #ff0000;
+  padding-left: 10px;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add subtle text shadow for readability */
+}
+
 .movie-list {
   display: flex;
   gap: 15px;
@@ -298,6 +318,11 @@ nav {
   position: relative;
   flex: 0 0 auto;
   width: 150px;
+  transition: transform 0.3s ease; /* Smooth scaling on hover */
+}
+
+.movie-card-container:hover {
+  transform: scale(1.05); /* Slight scale-up on hover */
 }
 
 .movie-card-link {
@@ -311,6 +336,7 @@ nav {
   height: auto;
   border-radius: 5px;
   display: block;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add shadow to movie cards */
 }
 
 .movie-info {
@@ -351,10 +377,61 @@ nav {
   padding: 5px 10px;
   border: 1px solid #888;
   border-radius: 20px;
+  transition: background-color 0.3s ease;
 }
 
 .view-all:hover {
   background-color: #2a2d3a;
+}
+
+/* Watchlist Buttons */
+.watchlist-button,
+.watchlist-remove-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 6px 0;
+  margin-top: 8px;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.watchlist-button {
+  background-color: #ff0000;
+  color: white;
+}
+
+.watchlist-button:hover {
+  background-color: #e60000;
+  transform: translateY(-2px); /* Slight lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.watchlist-button:active {
+  transform: translateY(0); /* Reset lift on click */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.watchlist-remove-button {
+  background-color: #444;
+  color: #fff;
+}
+
+.watchlist-remove-button:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.watchlist-remove-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Custom Dropdown Styles */
@@ -731,6 +808,23 @@ nav {
     font-size: 0.875rem;
   }
 
+  /* Watchlist Section */
+  .watchlist-section {
+    padding: 10px;
+  }
+
+  .watchlist-section h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Watchlist Buttons */
+  .watchlist-button,
+  .watchlist-remove-button {
+    font-size: 0.7rem;
+    padding: 5px 0;
+    margin-top: 6px;
+  }
+
   /* Modal */
   .modal-content {
     width: 95%;
@@ -856,6 +950,19 @@ nav {
   .watch-now {
     padding: 6px 10px;
     font-size: 0.75rem;
+  }
+
+  /* Watchlist Section */
+  .watchlist-section h2 {
+    font-size: 1.2rem;
+  }
+
+  /* Watchlist Buttons */
+  .watchlist-button,
+  .watchlist-remove-button {
+    font-size: 0.65rem;
+    padding: 4px 0;
+    margin-top: 5px;
   }
 
   /* Modal */
