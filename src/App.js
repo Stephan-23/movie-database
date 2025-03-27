@@ -18,6 +18,7 @@ import {
 import { auth, signInWithGoogle, logOut, addToWatchlist, removeFromWatchlist, getWatchlist } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import './App.css';
+import 'Recom.css';
 
 function App() {
   const [trendingMovies, setTrendingMovies] = useState([]);
@@ -26,15 +27,16 @@ function App() {
   const [genreSeries, setGenreSeries] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [genreMovies, setGenreMovies] = useState([]);
+  const [recommendedMovies, setRecommendedMovies] = useState([]); // New state for recommendations
   const [selectedGenre, setSelectedGenre] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
   const [trailerUrl, setTrailerUrl] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false); // State for hamburger menu
-  const [user, setUser] = useState(null); // State to track logged-in user
-  const [watchlist, setWatchlist] = useState([]); // State for watchlist
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [watchlist, setWatchlist] = useState([]);
   const timerRef = useRef(null);
 
   // Monitor authentication state and fetch watchlist
@@ -49,12 +51,14 @@ function App() {
           setError('Failed to fetch watchlist.');
         }
       } else {
-        setWatchlist([]); // Clear watchlist on logout
+        setWatchlist([]);
+        setRecommendedMovies([]); // Clear recommendations on logout
       }
     });
     return () => unsubscribe();
   }, []);
 
+  // Fetch initial data (trending, top-rated movies, and series)
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -78,6 +82,7 @@ function App() {
     fetchData();
   }, []);
 
+  // Fetch movies and series by genre when selectedGenre changes
   useEffect(() => {
     const fetchMoviesByGenre = async () => {
       if (selectedGenre) {
@@ -116,6 +121,55 @@ function App() {
     fetchMoviesByGenre();
     fetchSeriesByGenre();
   }, [selectedGenre]);
+
+  // Fetch recommended movies based on watchlist genres
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!user || watchlist.length === 0) {
+        setRecommendedMovies([]);
+        return;
+      }
+
+      try {
+        // Step 1: Extract genres from watchlist
+        const genreCounts = {};
+        watchlist.forEach((item) => {
+          if (item.genre_ids) {
+            item.genre_ids.forEach((genreId) => {
+              genreCounts[genreId] = (genreCounts[genreId] || 0) + 1;
+            });
+          }
+        });
+
+        // Step 2: Find the most common genre
+        const mostCommonGenre = Object.keys(genreCounts).sort(
+          (a, b) => genreCounts[b] - genreCounts[a]
+        )[0];
+
+        if (!mostCommonGenre) {
+          setRecommendedMovies([]);
+          return;
+        }
+
+        // Step 3: Fetch movies for the most common genre
+        const movies = await getMoviesByGenre(mostCommonGenre);
+
+        // Step 4: Filter out movies already in the watchlist
+        const filteredMovies = movies.filter(
+          (movie) => !watchlist.some((watchlistItem) => watchlistItem.id === movie.id)
+        );
+
+        // Step 5: Limit to 10 recommendations
+        setRecommendedMovies(filteredMovies.slice(0, 10));
+      } catch (error) {
+        console.error('Error fetching recommendations:', error);
+        setError('Failed to load recommendations.');
+        setRecommendedMovies([]);
+      }
+    };
+
+    fetchRecommendations();
+  }, [watchlist, user]);
 
   const featuredMovie = trendingMovies[currentMovieIndex] || {};
   useEffect(() => {
@@ -236,11 +290,10 @@ function App() {
     setMenuOpen(!menuOpen);
   };
 
-  // Handle login and logout
   const handleLogin = async () => {
     try {
       await signInWithGoogle();
-      setMenuOpen(false); // Close menu after login
+      setMenuOpen(false);
     } catch (error) {
       console.error('Error signing in:', error);
       setError('Failed to sign in. Please try again.');
@@ -250,14 +303,13 @@ function App() {
   const handleLogout = async () => {
     try {
       await logOut();
-      setMenuOpen(false); // Close menu after logout
+      setMenuOpen(false);
     } catch (error) {
       console.error('Error signing out:', error);
       setError('Failed to sign out. Please try again.');
     }
   };
 
-  // Add/Remove from Watchlist
   const handleAddToWatchlist = async (item) => {
     if (!user) {
       alert('Please log in to add to your watchlist.');
@@ -420,7 +472,7 @@ function App() {
 
                 {/* Watchlist Section */}
                 {user && watchlist.length > 0 && (
-                  <section className="section">
+                  <section className="watchlist-section">
                     <h2>Your Watchlist</h2>
                     <div className="movie-list">
                       {watchlist.map((item) => (
@@ -437,6 +489,39 @@ function App() {
                           >
                             Remove
                           </button>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* Recommended Movies Section */}
+                {user && recommendedMovies.length > 0 && (
+                  <section className="section recommended-section">
+                    <h2>Recommended for You</h2>
+                    <div className="movie-list">
+                      {recommendedMovies.map((movie) => (
+                        <div key={movie.id} className="movie-card-container">
+                          <NavLink to={`/movie/${movie.id}`} className="movie-card">
+                            <MovieCard movie={movie} />
+                          </NavLink>
+                          {user && (
+                            watchlist.some((item) => item.id === movie.id) ? (
+                              <button
+                                className="watchlist-remove-button"
+                                onClick={() => handleRemoveFromWatchlist(movie)}
+                              >
+                                Remove
+                              </button>
+                            ) : (
+                              <button
+                                className="watchlist-button"
+                                onClick={() => handleAddToWatchlist(movie)}
+                              >
+                                Add to Watchlist
+                              </button>
+                            )
+                          )}
                         </div>
                       ))}
                     </div>
@@ -607,7 +692,7 @@ function App() {
               </>
             }
           />
-         <Route
+          <Route
             path="/movie/:id"
             element={
               <MovieDetails
