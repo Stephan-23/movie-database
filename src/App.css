@@ -47,6 +47,7 @@ nav {
   color: white;
   text-decoration: none;
   font-size: 1rem;
+  transition: color 0.3s ease; /* Smooth transition for hover */
 }
 
 .nav-link.active {
@@ -65,6 +66,55 @@ nav {
   border: none;
   color: white;
   cursor: pointer;
+  transition: transform 0.3s ease; /* Smooth rotation for hamburger */
+}
+
+.hamburger:hover {
+  transform: rotate(90deg); /* Rotate on hover for a playful effect */
+}
+
+/* Authentication Section */
+.auth-section {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Increased gap for better spacing */
+  margin-left: 20px; /* Add some margin to separate from other nav items */
+}
+
+.user-name {
+  color: #ddd;
+  font-size: 0.9rem; /* Slightly smaller for better fit */
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.1); /* Subtle background for emphasis */
+  padding: 5px 10px;
+  border-radius: 15px; /* Rounded corners */
+  transition: background 0.3s ease; /* Smooth background transition */
+}
+
+.user-name:hover {
+  background: rgba(255, 255, 255, 0.2); /* Lighten on hover */
+}
+
+.auth-button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px; /* More rounded for a modern look */
+  background-color: #ff0000;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600; /* Slightly bolder text */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.auth-button:hover {
+  background-color: #cc0000;
+  transform: scale(1.05); /* Slight scale-up on hover */
+}
+
+.auth-button:active {
+  transform: scale(0.95); /* Slight scale-down on click */
 }
 
 /* Search Bar */
@@ -607,6 +657,7 @@ nav {
   .custom-dropdown {
     width: 100%;
     text-align: center;
+    margin-left: 0; /* Reset margin for mobile */
   }
 
   .dropdown-trigger {
@@ -618,6 +669,31 @@ nav {
   .dropdown-content {
     width: 100%;
     right: 0;
+  }
+
+  /* Authentication Section on Mobile */
+  .auth-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-left: 0;
+    padding: 10px 20px;
+    width: 100%;
+  }
+
+  .user-name {
+    font-size: 1rem;
+    padding: 8px 15px;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .auth-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px; /* Less rounded on mobile for better fit */
   }
 
   /* Search Bar */
@@ -749,6 +825,17 @@ nav {
 
   .hamburger {
     font-size: 1.2rem;
+  }
+
+  /* Authentication Section on Smaller Mobile */
+  .user-name {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .auth-button {
+    padding: 8px;
+    font-size: 0.9rem;
   }
 
   /* Hero Section */
