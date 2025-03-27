@@ -1,36 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getMovieVideos } from '../api';
+import { getMovieDetails, getMovieVideos } from '../api';
 
-function MovieDetails({ movies }) {
+
+function MovieDetails({
+  user,
+  watchlist,
+  handleAddToWatchlist,
+  handleRemoveFromWatchlist,
+  movies,
+}) {
   const { id } = useParams();
-  const movie = movies.find((m) => m.id === Number(id));
+  const movie = movies ? movies.find((m) => m.id === Number(id)) : null;
+
   const [trailerKey, setTrailerKey] = useState(null);
   const [showTrailer, setShowTrailer] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchTrailer = async () => {
-      if (movie) {
-        try {
-          const videos = await getMovieVideos(movie.id);
-          const trailer = videos.find(
-            (video) =>
-              (video.type === 'Trailer' || video.type === 'Teaser') &&
-              video.site === 'YouTube'
-          );
-          setTrailerKey(trailer ? trailer.key : null);
-        } catch (error) {
-          console.error('Error fetching trailer in MovieDetails:', error);
-          setTrailerKey(null);
-        }
+    const fetchMovieDetails = async () => {
+      setLoading(true);
+      setError(null);
+
+      if (!movie) return;
+
+      try {
+        const videos = await getMovieVideos(movie.id);
+        const trailer = videos.find(
+          (video) =>
+            (video.type === 'Trailer' || video.type === 'Teaser') &&
+            video.site === 'YouTube'
+        );
+        setTrailerKey(trailer ? trailer.key : null);
+      } catch (error) {
+        console.error('Error fetching movie details:', error);
+        setError('Failed to load movie details. Please try again.');
+      } finally {
+        setLoading(false);
       }
     };
-    fetchTrailer();
+
+    fetchMovieDetails();
   }, [movie]);
 
-  if (!movie) {
-    return <p className="error">Movie not found!</p>;
-  }
+  if (loading) return <p className="loading">Loading...</p>;
+  if (error) return <p className="error">{error}</p>;
+  if (!movie) return <p className="error">Movie not found!</p>;
+
+  const isInWatchlist = watchlist.some((item) => item.id === movie.id);
 
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
@@ -56,9 +74,7 @@ function MovieDetails({ movies }) {
     <div
       className="movie-details"
       style={{
-        backgroundImage: backdropUrl
-          ? `url(${backdropUrl})`
-          : 'none',
+        backgroundImage: backdropUrl ? `url(${backdropUrl})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -74,6 +90,19 @@ function MovieDetails({ movies }) {
               {trailerKey && (
                 <button className="play-button" onClick={handlePlayTrailer}>
                   ▶
+                </button>
+              )}
+              {/* Add Watchlist Button Below Poster */}
+              {user && (
+                <button
+                  className={isInWatchlist ? 'watchlist-remove-button' : 'watchlist-button'}
+                  onClick={() =>
+                    isInWatchlist
+                      ? handleRemoveFromWatchlist(movie)
+                      : handleAddToWatchlist(movie)
+                  }
+                >
+                  {isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'}
                 </button>
               )}
             </>

@@ -607,10 +607,14 @@ function App() {
               </>
             }
           />
-          <Route
+         <Route
             path="/movie/:id"
             element={
               <MovieDetails
+                user={user}
+                watchlist={watchlist}
+                handleAddToWatchlist={handleAddToWatchlist}
+                handleRemoveFromWatchlist={handleRemoveFromWatchlist}
                 movies={[...trendingMovies, ...topRatedMovies, ...genreMovies]}
               />
             }
