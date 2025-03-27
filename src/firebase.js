@@ -4,14 +4,14 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/
 import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCmQiCA1UHw5ayVOXJMhbdHBGWtxru1-Yo",
-    authDomain: "moviedatabase-beab8.firebaseapp.com",
-    projectId: "moviedatabase-beab8",
-    storageBucket: "moviedatabase-beab8.firebasestorage.app",
-    messagingSenderId: "751874263992",
-    appId: "1:751874263992:web:6a42df07d57a1e7603dd4d",
-    measurementId: "G-59544VNCRX"
-  };
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+};
 const app = initializeApp(firebaseConfig);export const auth = getAuth(app);
 export const db = getFirestore(app);export const googleProvider = new GoogleAuthProvider();export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
 export const logOut = () => signOut(auth);// Watchlist Functions
