@@ -14,6 +14,7 @@ A React-based web application that allows users to search for movies and view de
 
 ## Features
 - Search for movies by title using the TMDb API.
+- Login feature for accessing features like add to watchlist, Recommended for You, Your watchlist
 - View a grid of movie cards with posters, titles, release dates, and short descriptions.
 - Click a movie card to see detailed information (rating, full overview, etc.) on a separate page.
 - Responsive design with loading and error states.
@@ -54,7 +55,7 @@ Follow these steps to get the project running locally:
 - **Navigation**: Use the "Back to Search" link or the header to return to the home page.
 
 ## Screenshots
-*(You can add these later by taking screenshots and uploading them to the repo.)*
+
 - **Home Page**: Displays the search bar and movie grid.
 - **Details Page**: Shows detailed movie info.
 
