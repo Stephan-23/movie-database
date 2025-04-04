@@ -8,7 +8,6 @@ A React-based web application that allows users to search for movies and view de
 - [Setup Instructions](#setup-instructions)
 - [Project Structure](#project-structure)
 - [Usage](#usage)
-- [Screenshots](#screenshots)
 - [Future Enhancements](#future-enhancements)
 - [License](#license)
 
@@ -53,11 +52,7 @@ Follow these steps to get the project running locally:
 - **Home Page**: Type a movie title (e.g., "Avengers") in the search bar and click "Search" to see a list of matching movies.
 - **Movie Details**: Click any movie card to view its full details, including a larger poster, rating, and overview.
 - **Navigation**: Use the "Back to Search" link or the header to return to the home page.
-
-## Screenshots
-
-- **Home Page**: Displays the search bar and movie grid.
-- **Details Page**: Shows detailed movie info.
+-  **Login**: Click on the login to login using your google account, and make your watchlist.
 
 ## Future Enhancements
 - Add pagination for search results.
